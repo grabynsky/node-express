@@ -1,8 +1,8 @@
 const {userRepository} = require("../repositories/user.repository");
 
 class UserService {
-    async getAll() {
-        return await userRepository.getAll()
+    async getAll(query) {
+        return await userRepository.getAll(query)
     }
 
     async create(user) {

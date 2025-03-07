@@ -1,8 +1,25 @@
 const {read, write} = require("../services/fs.service");
 
 class UserRepository {
-    async getAll() {
-        return read();
+    async getAll(query) {
+        const users = await read();
+        if (query.name && query.surname) {
+            return users.filter(
+                user => user.name.toLowerCase() === query.name.toLowerCase() &&
+                    user.surname.toLowerCase() === query.surname.toLowerCase()
+
+            );
+        }
+
+        if (query.name || query.surname) {
+            return users.filter(
+                user => user.name.toLowerCase() === query.name?.toLowerCase() ||
+                    user.surname.toLowerCase() === query.surname?.toLowerCase()
+
+            );
+        }
+
+        return users;
     }
 
     async create(user) {

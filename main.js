@@ -7,7 +7,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.get('/users', async (req, res) => {
-    const data = await userService.getAll();
+    const {query} = req;
+    const data = await userService.getAll(query);
 
     res.json(data)
 })
