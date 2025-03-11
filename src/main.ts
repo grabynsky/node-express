@@ -1,48 +1,40 @@
-const express = require('express');
-const {userService} = require("./services/user.service");
+import express from "express";
+import * as mongoose from "mongoose";
+import {config} from "./config/config";
+import {apiRouter} from "./routers/api.router";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.get('/users', async (req, res) => {
-    const {query} = req;
-    const data = await userService.getAll(query);
+app.use("/", apiRouter)
 
-    res.json(data)
-})
+const dbConnection = async () => {
+    let dbCon = false;
 
-app.get('/users/:id', async (req, res) => {
-    const id = req.params.id;
-    const data = await userService.getById(id);
+    while (!dbCon) {
+        try {
+            console.log('Connecting to DB...');
+            await mongoose.connect(config.MONGO_URI);
+            dbCon = true;
+            console.log('Database available!!!');
+        } catch (e) {
+            console.log('Database unavailable, wait 3 seconds');
+            await new Promise(resolve => setTimeout(resolve, 3000))
+        }
+    }
+}
 
-    res.json(data);
-})
+const start = async () => {
+    try {
+        await dbConnection()
+        app.listen(config.PORT, () => {
+            console.log(`Server listening on ${config.PORT}`);
+        })
+    } catch (e) {
+        console.log(e)
+    }
+}
 
-app.post('/users', async (req, res) => {
-    const user = req.body;
-
-    const data = await userService.create(user);
-
-    res.json(data);
-})
-
-app.patch('/users/:id', async (req, res) => {
-    const id = req.params.id;
-    const user = req.body;
-    const data = await userService.patchUser(id, user);
-
-    res.json(data)
-})
-
-app.delete('/users/:id', async (req, res) => {
-    const id = req.params.id;
-    const data = await userService.deleteById(id);
-
-    res.json(data)
-})
-
-app.listen(3000, () => {
-    console.log('Server running on 3000 port')
-})
+void  start();

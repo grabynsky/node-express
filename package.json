@@ -4,11 +4,13 @@
   "description": "Learn express",
   "main": "src/main.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "rimraf dist && tsc-watch --onSuccess \"npm run watch:server\"",
+    "watch:server": "ts-node src/main.ts --watch"
   },
   "dependencies": {
     "express": "^4.21.2",
-    "mongoose": "^8.12.1"
+    "mongoose": "^8.12.1",
+    "dotenv": "^16.4.7"
   },
   "devDependencies": {
     "typescript": "^5.8.2",
