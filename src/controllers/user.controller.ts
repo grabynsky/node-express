@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import { StatusCodesEnum } from "../enums/status-codes.enum";
 import { IUserDTO } from "../interfaces/user.interface";
@@ -10,10 +10,14 @@ class UserController {
         res.status(StatusCodesEnum.OK).json(data);
     }
 
-    public async create(req: Request, res: Response) {
-        const user = req.body as IUserDTO;
-        const data = await userService.create(user);
-        res.status(StatusCodesEnum.CREATED).json(data);
+    public async create(req: Request, res: Response, next: NextFunction) {
+        try {
+            const user = req.body as IUserDTO;
+            const data = await userService.create(user);
+            res.status(StatusCodesEnum.CREATED).json(data);
+        } catch (e) {
+            next(e);
+        }
     }
 
     public async getById(req: Request, res: Response) {
