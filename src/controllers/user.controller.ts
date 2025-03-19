@@ -1,7 +1,8 @@
-import {Request, Response} from "express";
-import {userService} from "../services/user.service";
-import {IUserDTO} from "../interfaces/user.interface";
-import {StatusCodesEnum} from "../enums/status-codes.enum";
+import { Request, Response } from "express";
+
+import { StatusCodesEnum } from "../enums/status-codes.enum";
+import { IUserDTO } from "../interfaces/user.interface";
+import { userService } from "../services/user.service";
 
 class UserController {
     public async getAll(req: Request, res: Response) {
@@ -16,20 +17,20 @@ class UserController {
     }
 
     public async getById(req: Request, res: Response) {
-        const {id} = req.params;
+        const { id } = req.params;
         const data = await userService.getById(id);
         res.status(StatusCodesEnum.OK).json(data);
     }
 
     public async updateById(req: Request, res: Response) {
-        const {id} = req.params;
+        const { id } = req.params;
         const newUser = req.body;
         const data = await userService.updateById(id, newUser);
         res.status(StatusCodesEnum.OK).json(data);
     }
 
     public async deleteById(req: Request, res: Response) {
-        const {id} = req.params;
+        const { id } = req.params;
         const data = await userService.deleteById(id);
         res.status(StatusCodesEnum.NO_CONTENT).json(data);
     }
