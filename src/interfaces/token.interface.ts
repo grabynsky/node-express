@@ -14,5 +14,6 @@ interface ITokenPayload {
     role: RoleEnum;
 }
 type ITokenPair = Pick<IToken, "accessToken" | "refreshToken">;
+type IRefresh = Pick<IToken, "refreshToken">;
 
-export { IToken, ITokenModel, ITokenPair, ITokenPayload };
+export { IRefresh, IToken, ITokenModel, ITokenPair, ITokenPayload };
