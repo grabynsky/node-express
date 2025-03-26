@@ -1,3 +1,4 @@
+import { templateConstants } from "../constants/template.constants";
 import { StatusCodesEnum } from "../enums/status-codes.enum";
 import { ApiError } from "../errors/api.error";
 import { IAuth } from "../interfaces/auth.interface";
@@ -5,6 +6,7 @@ import { ITokenPair } from "../interfaces/token.interface";
 import { IUser, IUserCreateDTO } from "../interfaces/user.interface";
 import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
+import { emailService } from "./email.service";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
 import { userService } from "./user.service";
@@ -23,6 +25,12 @@ class AuthService {
         });
 
         await tokenRepository.createTokens({ ...tokens, _userId: newUser._id });
+        await emailService.sendEmail(
+            newUser.email,
+            "Welcome",
+            templateConstants.WELCOME,
+            { name: newUser.name },
+        );
 
         return { user: newUser, tokens };
     }
@@ -45,6 +53,14 @@ class AuthService {
             dto.password,
             user.password,
         );
+
+        if (!user.isActive) {
+            throw new ApiError(
+                "Account is not active",
+                StatusCodesEnum.FORBIDDEN,
+            );
+        }
+
         if (!isValidPassword) {
             throw new ApiError(
                 "Invalid email or password",

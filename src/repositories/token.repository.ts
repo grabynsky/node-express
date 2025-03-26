@@ -1,5 +1,5 @@
 import { IToken, ITokenModel } from "../interfaces/token.interface";
-import { Token } from "../modules/token.module";
+import { Token } from "../models/token.module";
 
 class TokenRepository {
     public createTokens(dto: ITokenModel): Promise<IToken> {
