@@ -5,6 +5,7 @@ import handlebars from "handlebars";
 import nodemailer, { Transporter } from "nodemailer";
 
 import { config } from "../config/config";
+import { IEmailData } from "../constants/email.constants";
 
 class EmailService {
     private transporter: Transporter;
@@ -45,15 +46,14 @@ class EmailService {
 
     public async sendEmail(
         to: string,
-        subject: string,
-        templateName: string,
+        emailData: IEmailData,
         context: Record<string, any>,
     ): Promise<void> {
         await this.transporter.sendMail({
             to,
-            subject,
+            subject: emailData.subject,
             // text: "Hello from nodemailer",
-            html: await this._renderTemplate(templateName, context),
+            html: await this._renderTemplate(emailData.template, context),
         });
     }
 }
