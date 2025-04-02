@@ -3,3 +3,8 @@
 node_modules
 dist
 .env
+backend/*.iml
+backend/dist
+backend/node_modules
+frontend/node_modules
+client
